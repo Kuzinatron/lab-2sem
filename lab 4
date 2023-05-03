@@ -1,0 +1,107 @@
+#include <iostream>
+using namespace std;
+
+template<class T,class T2>
+class Map {
+private:
+    struct KeyValue {
+        T key;
+        T2 value;
+    };
+    KeyValue** data;
+    int size;
+public:
+    Map(int size) {
+        data = new KeyValue * [size];
+        this->size = size;
+        for (int i = 0; i < size; i++) {
+            data[i] = NULL;
+        }
+    }
+
+    ~Map() {
+        for (int i = 0; i < size; i++) {
+            if (data[i] != NULL) {
+                delete data[i];
+            }
+        }
+        delete[] data;
+    }
+
+    void insert(T key, T2 value) {
+        KeyValue* newData = new KeyValue;
+        newData->key = key;
+        newData->value = value;
+        int i = 0;
+        while (data[i] != NULL && data[i]->key < key) {
+            i++;
+        }
+        if (data[i] == NULL || data[i]->key != key)
+        {
+            for (int j = size - 1; j > i; j--) {
+                data[j] = data[j - 1];
+            }
+            data[i] = newData;
+        }
+    }
+
+    int operator[](T key) {
+        for (int i = 0; i < size; i++) {
+            if (data[i] != NULL && data[i]->key == key) {
+                return data[i]->value;
+            }
+        }
+        cout << "Key not found" << endl;
+        
+    }
+    void getsize()
+    {
+        cout << size << endl;;
+    }
+    void clear()
+    {
+        for (size_t i = 0; i < size; i++)
+        {
+            data[i] = NULL;
+
+        }
+        
+    }
+    
+    T* begin() { return &arrs[0]; }
+
+    T* end() { return &arrs[size]; }
+
+   
+    void empty()
+    {
+        if (size == 0)
+        {
+            cout << "YEE" << endl;
+
+        }
+        else cout << "NOU" << endl;
+    }
+    void print() {
+        for (int i = 0; i < size; i++) {
+            if (data[i] != NULL) {
+                cout << "[" << data[i]->key << ", " << data[i]->value << "]" << endl;
+            }
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    Map <int,int> map(5);
+    map.insert(3, 30);
+    map.insert(1, 10);
+    map.insert(1, 11);
+    map.insert(2, 22);
+    map.insert(5, 50);
+    map.insert(2, 20);
+    map.insert(4, 40);
+    map.print();
+    cout << map[3];
+    return 0;
+}
