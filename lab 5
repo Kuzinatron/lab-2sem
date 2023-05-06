@@ -1,0 +1,144 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <Windows.h>
+
+using namespace std;
+
+const int TABLE_SIZE = 10;
+
+class HashMap {
+private:
+    struct HashNode {
+        string key;
+        int value;
+        bool isDeleted;
+    };
+
+    HashNode* table;
+
+public:
+    HashMap() {
+        table = new HashNode[TABLE_SIZE];
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            table[i].key = "";
+            table[i].value = 0;
+            table[i].isDeleted = false;
+        }
+    }
+
+    ~HashMap() {
+        delete[] table;
+    }
+
+    int getHashCode(string key) {
+        int sum = 0;
+        int temp = 0;
+        for (int i = 0; i < key.size(); i++) {
+            sum += (int)key[i];
+        }
+        temp = sum % TABLE_SIZE;
+        
+        return temp;
+    }
+
+    void insert(string key, int value) {
+        int hash = getHashCode(key);
+        while (table[hash].key != "" && table[hash].key != key) {
+            hash = (hash + 1) % TABLE_SIZE;
+        }
+        if (table[hash].key != "" && table[hash].key == key)
+        {
+            hash = (hash + 1) % TABLE_SIZE;
+        }
+        table[hash].key = key;
+        table[hash].value = value;
+        
+    }
+
+    int get(string key) {
+        int hash = getHashCode(key);
+        while (table[hash].key != "") {
+            if (table[hash].key == key) {
+                return table[hash].value;
+            }
+           
+        }
+        cout << "Key not found" << endl;
+        return 0;
+    }
+
+    void remove(string key) {
+        int hash = getHashCode(key);
+        while (table[hash].key != "") {
+            if (table[hash].key == key) {
+                table[hash].isDeleted = true;
+                return;
+            }
+            
+        }
+        cout << "Key not found" << endl;
+    }
+
+    void readFromFile() {
+        ifstream infile("TEXT.txt");
+        if (!infile.is_open()) {
+            cout << "Error opening file" << endl;
+            return;
+        }
+
+        string line;
+        while (getline(infile, line)) {
+            istringstream iss(line);
+            string key;
+            int value;
+            if (!(iss >> key >> value)) {
+                cout << "Error parsing line: " << line << endl;
+                continue;
+            }
+            insert(key, value);
+        }
+
+        infile.close();
+    }
+
+    void printTable() {
+        cout << "Hash Table:" << endl;
+        cout << "-----------" << endl;
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            cout << "[" << i << "]";
+            if (table[i].key != "") {
+                if (table[i].isDeleted) {
+                    table[i].isDeleted = NULL;
+                    cout << endl;
+                }
+                else {
+                    cout << " " << table[i].key << ": " << table[i].value << endl;
+                }
+            }
+            else {
+                cout << endl;
+            }
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    HashMap map;
+    map.insert("ARTUR", 18);
+    map.insert("ARTUR", 17);
+    map.insert("ARTEM", 15);
+    map.insert("DAN", 14);
+    map.insert("ZZZZZZZZZZZZ", 11);
+    map.printTable();
+   /* map.readFromFile();
+    map.printTable();*/
+   
+  
+  
+    
+    map.printTable();
+    return 0;
+}
