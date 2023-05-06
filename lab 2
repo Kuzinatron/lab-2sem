@@ -1,0 +1,208 @@
+#include<iostream>
+using namespace std;
+
+
+class Matrix
+{
+protected:
+    int Size1, Size2;
+    int s = 0;
+
+public:
+
+    int** data;
+    int* date;
+
+    Matrix() { Size1 = 0, Size2 = 0; }
+    Matrix(int Size1, int Size2)
+    {   
+        
+
+        this->data = new int* [Size1];
+        for (int i = 0; i < Size1; i++)
+        {
+            data[i] = new int[Size2];
+        }
+        for (int i = 0; i < Size1; i++)
+        {
+            for (int j = 0; j < Size2; j++)
+            {
+                data[i][j] = rand() % 10;
+                cout << data[i][j] << " | ";
+            }
+            cout << endl;
+        }
+        cout << endl;
+ 
+        /*for (size_t i = 0; i < Size1; i++)
+        {
+
+            for (size_t j = 0; j < Size2; j++)
+            {
+                s += data[i][j];
+                cout << date[i] << " | ";
+            }
+            cout << endl << endl;
+            
+
+        } cout << s<<endl;
+        
+        cout << endl;*/
+    }
+   
+    
+    int rovn();
+  /*  void print()
+    {
+        for (int i = 0; i < Size1; i++)
+        {
+            for (int j = 0; j < Size2; j++)
+            {
+                cout << data[i][j] << " | ";
+
+            }
+            cout << endl;
+        }
+    }*/
+    Matrix(const Matrix& other) //Конструктор копирования
+    {
+
+        this->Size1 = other.Size1;
+        this->Size2 = other.Size2;
+        data = new int* [other.Size1];
+
+        for (int i = 0; i < other.Size1; i++)
+        {
+            this->data[i] = new int[other.Size2];
+        }
+        for (int i = 0; i < other.Size1; i++)
+        {
+            for (int j = 0; j < other.Size2; j++)
+            {
+                data[i][j] = other.data[i][j];
+                cout << other.data[i][j] << " | ";
+            }
+            cout << endl;
+        }
+    };
+
+    
+
+
+    bool operator == (Matrix& other)
+    {
+        return (this->s) == (other.s);
+    }
+    bool operator<=(Matrix& other) 
+    {
+        return (this->s) <= (other.s);
+    }
+
+    bool operator>=(Matrix& other) 
+    {
+        return (this->s) >= (other.s);
+    }
+
+    bool operator > (Matrix & other)
+    {
+        return (this->s) > (other.s);
+    }
+    bool operator < (Matrix& other)
+    {
+        return (this->s) < (other.s);
+    }
+    bool operator!=(Matrix& other) 
+    {
+        return (this->s) != (other.s);
+    }
+
+    ~Matrix()
+    {
+      
+        delete[] data;
+    }
+};
+
+class SMatrix : public Matrix
+{
+    
+public:
+    SMatrix(int Size1, int Size2) 
+    {
+        for (size_t i =1; i < Size1; i++)
+        {
+            for (size_t j = 0; j < Size2-1; j++) 
+            {
+                data[i][j] = rand()%10;
+                cout << data[i][j]<<" | ";
+                
+            }cout << endl;
+
+        }
+
+    }
+    
+};
+
+class LMatrix : public Matrix
+{
+
+public:
+    LMatrix(int Size1,int Size2);//Конструктор
+    
+
+};
+
+LMatrix::LMatrix(int Size1,int Size2) : Matrix(Size1,Size2)
+{   
+    Size1 = 1;
+    for (size_t i = 0; i < Size1; i++)
+    {
+        for (size_t j = 0; j < Size2; j++)
+        {
+            s += data[i][j];
+            
+        }
+    }cout << s << endl;
+
+
+}
+int Matrix::rovn()
+{
+
+    if (Size1 == Size2)
+    {
+        cout << "Ровный" << endl;
+        for (int i = 0; i < Size1; i++)
+        {
+            for (int j = 0; j < Size2; j++)
+            {
+                if (data[i][j] == data[j][i] && i != j)
+                {
+                    cout << " Симметрична" << endl;
+                    return 0;
+                }
+
+
+            }
+
+        }
+    }
+
+}
+int main()
+{
+    setlocale(LC_ALL, "RU");
+    srand(time(NULL));
+
+ 
+    SMatrix(3, 3);
+
+    cout << endl;
+    //bool result = a != с;
+    //bool result1 = b == с;
+    /*bool result2 = b != a;*/
+    cout << "Резульата сравнения: " <<"  "<< endl;
+    
+
+}
