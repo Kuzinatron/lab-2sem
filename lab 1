@@ -1,0 +1,131 @@
+#include<iostream>
+using namespace std;
+
+class Matrix
+{
+    int Size1, Size2;
+    int** data;
+    int s;
+public:
+    
+    Matrix() {
+        Size1 = 0;
+        Size2 = 0;
+        s = 0;
+    };
+    Matrix(int cols, int rows)//Конструктор
+    {
+        Size1 = cols;
+        Size2 = rows;
+        cout << "Вызвался конструктор" << this << endl;
+        data = new int* [cols];
+        for (int i = 0; i < cols; i++)
+        {
+            data[i] = new int[rows];
+        }
+        for (int i = 0; i < cols; i++)
+        {
+            for (int j = 0; j < rows; j++)
+            {
+                cin >> s;
+                data[i][j] = s;
+                
+            }
+            
+        }
+        
+        cout << endl;
+       
+    }
+
+   int rovn();
+   void print()
+   {
+       for (int i = 0; i < Size1; i++)
+       {   
+           for (int j = 0; j < Size2; j++)
+           {
+               cout << data[i][j]<<" | ";
+
+           }
+           cout << endl;
+       }
+   }
+
+    
+    Matrix(const Matrix& other) //Конструктор копирования
+    {
+        cout << "Вызвался конструктор копирования" << this << endl;
+
+        this->Size1 = other.Size1;
+        this->Size2 = other.Size2;
+        this->data = new int* [other.Size1];
+
+        for (int i = 0; i < other.Size1; i++)
+        {
+            this->data[i] = new int[other.Size2];
+        }
+        for (int i = 0; i < other.Size1; i++)
+        {
+            for (int j = 0; j < other.Size2; j++)
+            {
+                data[i][j] = other.data[i][j];
+                cout << other.data[i][j] << " | ";
+            }
+            cout << endl;
+        }
+
+
+        
+        
+    };
+
+    
+   
+    ~Matrix()
+    {
+        cout << "Вызвался деструктор" << this << endl;
+
+        delete[] data;
+    }
+};
+
+
+int main()
+{
+    srand(time(NULL));
+    setlocale(LC_ALL,"RU");
+    
+    Matrix a(2, 2);
+    Matrix b(a);
+    a.print();
+    
+
+    
+    
+
+}
+
+int Matrix::rovn()
+{    
+
+    if (Size1 == Size2)
+    {
+        cout << "Ровный" << endl;
+        for (int i = 0; i < Size1; i++)
+        {
+            for (int j = 0; j < Size2; j++)
+            {
+                if (data[i][j] == data[j][i] && i!=j)
+                {
+                    cout << " Симметрична" << endl;
+                    return 0;
+                }
+                
+               
+            }
+            
+        }
+    }
+
+}
