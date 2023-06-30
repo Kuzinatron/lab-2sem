@@ -1,0 +1,111 @@
+#include <iostream>
+#include <vector>
+#include <map>
+
+
+using namespace std;
+
+class ChessBoard {
+public:
+    ChessBoard(int size = 8) : size_(size) {}
+
+    // Проверка валидности координат на доске.
+    bool is_valid(int x, int y) {
+        return x >= 0 && x < size_&& y >= 0 && y < size_;
+    }
+
+    // Получение списка соседних клеток.
+    vector<pair<int, int>> get_neighbors(int x, int y) {
+        vector<pair<int, int>> neighbors;
+        // Вектор возможных ходов коня.
+        vector<pair<int, int>> moves = {
+            {-2, -1}, {-1, -2}, {1, -2}, {2, -1},
+            {-2, 1}, {-1, 2}, {1, 2}, {2, 1}
+        };
+        for (auto move : moves) {
+            // Координаты соседней клетки.
+            int nx = x + move.first;
+            int ny = y + move.second;
+            // Если координаты валидны, добавляем соседнюю клетку в список.
+            if (is_valid(nx, ny)) {
+                neighbors.push_back({ nx, ny });
+            }
+        }
+        return neighbors;
+    }
+
+private:
+    int size_;
+};
+
+class ShortestPathFinder : public ChessBoard
+{
+public:
+    ShortestPathFinder(int size = 8) :  board_(size) {}
+
+    // Поиск кратчайшего пути между двумя клетками на доске.
+    int dijkstra(pair<int, int> start, pair<int, int> end) {
+        // Создание std::map для хранения расстояний между клетками.
+        map<pair<int, int>, int> dist;
+        // Начальная клетка имеет расстояние 0.
+        dist[start] = 0;
+
+
+       
+        while (!dist.count(end)) { //проверяет пусто или нет, если да 1, нет 0
+            // Находим ближайшую необработанную клетку.
+            pair<int, int> this_kletka;
+            int this_distance = -1; //создаём переменную, которая обозначет обработанную дистанцию
+            for (auto vxod : dist)
+            {
+                if (vxod.second < 0) {
+                    continue;
+                }
+                if (this_distance < 0 || vxod.second < this_distance) {
+                    this_kletka = vxod.first;
+                    this_distance = vxod.second;
+                }
+            }
+            // Если все клетки нельзя достать, завершаем поиск.
+            if (this_distance < 0)
+            {
+                break;
+            }
+            // Обновляем расстояния до соседних клеток.
+            auto neighbors = get_neighbors(this_kletka.first, this_kletka.second);
+            for (auto neighbor : neighbors) {
+                int new_dist = this_distance + 1;
+                if (dist.count(neighbor) == 0 || new_dist < dist[neighbor]) {
+                    dist[neighbor] = new_dist;
+                }
+            }
+
+            dist[this_kletka] = -1;// Помечаем текущую клетку как обработанную.
+        }
+
+        // Возвращаем расстояние до конечной клетки или -1, если она недостижима.
+        if (dist.count(end) > 0) {
+            return dist[end];
+        }
+        else {
+            return -1;
+        }
+
+
+    }
+
+
+private:
+    ChessBoard board_;
+};
+
+int main() {
+    
+    setlocale(LC_ALL, "RUS");
+    ShortestPathFinder spf;
+    pair<int, int> start = { 0, 0 };
+    pair<int, int> end = { 6, 5 };
+    int shortest_path = spf.dijkstra(start, end);
+    cout << "Конь убежит на " << shortest_path << " клетки" << endl;
+    return 0;
+}
